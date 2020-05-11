@@ -7,6 +7,7 @@ const app = express();
 app.use(express.json());
 app.use(cors()); // for crossdomain
 
+
 /////////////////////////////////////////// MySQL //////////////////////////////////////////////
 
 var database = mysql.createConnection({
@@ -50,7 +51,7 @@ function insert(sql)//name,age,permission)
 	}
 }
 
-function select(sql)//name,age,permission)
+function select(sql,res)//name,age,permission)
 {
 	//console.log("SQL : "+sql);
 	if(isConnected)
@@ -62,7 +63,7 @@ function select(sql)//name,age,permission)
 				throw error;
 			}
 
-			console.log(result);
+			res.send(result);
 		});
 	}
 	else
@@ -72,41 +73,32 @@ function select(sql)//name,age,permission)
 }
 
 /////////////////////////////////////////// API //////////////////////////////////////////////////
-var users = [
-	{
-		id: 1,
-		name: "Raksit Panwong",
-		age: 32,
-		permission:1
-	},
-	{
-		id: 2,
-		name: "CODESMASH",
-		age: 5,
-		permission:2
-	}
-];
 
 app.get('/api/users',cors(),bodyParser, (req,res)=>{
-	res.send(users);
+	
 	sql = "SELECT * FROM `user`";
-	select(sql);
+	select(sql,res);
+
 });
 
 app.post('/api/users',cors(),bodyParser, (req,res)=>{
 	var new_user = {
-		id: users.length+1,
 		name: req.body.name,
 		age: req.body.age,
 		permission: req.body.permission
 
 	};
-	//console.log(req);
-	sql = "INSERT INTO `user`(`name`,`age`,`permission`) VALUES ('Net','44','2')";
-	console.log(insert(sql));
+
+	sql = "INSERT INTO `user`(`name`,`age`,`permission`) VALUES ('"+new_user['name']+"','"+new_user['age']+"','"+new_user['permission']+"')";
+	insert(sql);
 	console.log(req.body);
-	users.push(new_user);
-	res.send(users);
+
+	//========= GET NEW USER LIST ========//
+	select_sql = "SELECT * FROM `user`";
+	select(select_sql,res);
+	//====================================//
+
+	
 });
 
 
