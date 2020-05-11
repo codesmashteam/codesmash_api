@@ -1,9 +1,11 @@
 const express = require('express');
 const bodyParser = require('body-parser').json();
 const mysql = require('mysql');
+const cors = require('cors');
 
 const app = express();
 app.use(express.json());
+app.use(cors()); // for crossdomain
 
 /////////////////////////////////////////// MySQL //////////////////////////////////////////////
 
@@ -85,13 +87,13 @@ var users = [
 	}
 ];
 
-app.get('/api/users',bodyParser, (req,res)=>{
+app.get('/api/users',cors(),bodyParser, (req,res)=>{
 	res.send(users);
 	sql = "SELECT * FROM `user`";
 	select(sql);
 });
 
-app.post('/api/users',bodyParser, (req,res)=>{
+app.post('/api/users',cors(),bodyParser, (req,res)=>{
 	var new_user = {
 		id: users.length+1,
 		name: req.body.name,
