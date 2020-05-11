@@ -2,8 +2,10 @@ const express = require('express');
 const bodyParser = require('body-parser').json();
 const mysql = require('mysql');
 const cors = require('cors');
+const querystring = require('querystring');
 
 const app = express();
+
 app.use(express.json());
 app.use(cors()); // for crossdomain
 
@@ -32,7 +34,7 @@ database.connect(function(error){
 
 function insert(sql)//name,age,permission)
 {
-	console.log("SQL : "+sql);
+	//console.log("SQL : "+sql);
 	if(isConnected)
 	{
 		//sql = "INSERT INTO `user`(`name`,`age`,`permission`) VALUES ('"+name+"','"+age+"','"+permission+"')";
@@ -74,9 +76,15 @@ function select(sql,res)//name,age,permission)
 
 /////////////////////////////////////////// API //////////////////////////////////////////////////
 
-app.get('/api/users',cors(),bodyParser, (req,res)=>{
+app.get('/api/users',cors(),bodyParser,async (req,res)=>{
 	
+	userid = req.query.id;
+
 	sql = "SELECT * FROM `user`";
+	if(userid != null)
+	{
+		sql += " WHERE `id` = '"+userid+"'";
+	}
 	select(sql,res);
 
 });
@@ -86,10 +94,9 @@ app.post('/api/users',cors(),bodyParser, (req,res)=>{
 		name: req.body.name,
 		age: req.body.age,
 		permission: req.body.permission
-
 	};
 
-	sql = "INSERT INTO `user`(`name`,`age`,`permission`) VALUES ('"+new_user['name']+"','"+new_user['age']+"','"+new_user['permission']+"')";
+	sql = "INSERT INTO `user`(`name`,`age`,`permission`) VALUES ('"+new_user[0]+"','"+new_user[1]+"','"+new_user[2]+"')";
 	insert(sql);
 	console.log(req.body);
 
@@ -99,6 +106,19 @@ app.post('/api/users',cors(),bodyParser, (req,res)=>{
 	//====================================//
 
 	
+});
+
+app.delete('/api/users',cors(),bodyParser,async (req,res)=>{
+	
+	userid = req.query.id;
+
+	sql = "DELETE FROM `user`";
+	if(userid != null)
+	{
+		sql += " WHERE `id` = '"+userid+"'";
+	}
+	select(sql,res);
+
 });
 
 
