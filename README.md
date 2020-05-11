@@ -8,3 +8,10 @@ Because we need to try which one is better.
 3. Run "node index.js"
 4. Open your web browser and access "http://localhost:3002/api/users" to get user list
 5. You can use POSTMAN to test the API.
+
+# API Using
+GET ALL - http://localhost:3002/api/users/
+GET ONE - http://localhost:3002/api/users/?id=32
+POST - http://localhost:3002/api/users/
+DELETE ONE - http://localhost:3002/api/users/?id=32
+
