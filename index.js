@@ -96,7 +96,9 @@ app.post('/api/users',cors(),bodyParser, (req,res)=>{
 		permission: req.body.permission
 	};
 
-	sql = "INSERT INTO `user`(`name`,`age`,`permission`) VALUES ('"+new_user[0]+"','"+new_user[1]+"','"+new_user[2]+"')";
+	console.log("new user : "+new_user['name']);
+
+	sql = "INSERT INTO `user`(`name`,`age`,`permission`) VALUES ('"+new_user['name']+"','"+new_user['age']+"','"+new_user['permission']+"')";
 	insert(sql);
 	console.log(req.body);
 
